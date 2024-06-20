@@ -21,7 +21,8 @@ void printMenu() {
     std::cout << "11. Слияние деревьев\n";
     std::cout << "12. Reduce (сумма всех элементов)\n";
     std::cout << "13. Тесты\n";
-    std::cout << "14. Выйти\n";
+    std::cout << "14. Benchmark test\n";
+    std::cout << "15. Выйти\n";
     std::cout << "Выберите опцию: ";
 }
 
@@ -213,8 +214,11 @@ int main() {
             IntBinarySearchTreeTest test;
             test.runAllTests();
         }
-        break;
         case 14:
+            IntBinarySearchTreeTest test;
+            test.benchmarkTest();
+        break;
+        case 15:
             std::cout << "Выход из программы.\n";
             break;
         

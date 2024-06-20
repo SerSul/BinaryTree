@@ -1,7 +1,12 @@
 #include "BinarySearchTree.h"
 #include <cassert>
 #include <functional>
+#include <chrono>
 #include <iostream>
+#include <vector>
+#include <random>
+#include <algorithm>
+#include <numeric>
 
 
 class IntBinarySearchTreeTest {
@@ -269,6 +274,121 @@ public:
         tree.remove(3);
         assert(tree.height(tree.getRoot()) == 3);
 
+    }
+
+
+    void benchmarkInsert(int n, std::vector<double>& times) {
+        BinarySearchTree<int> tree;
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 1; i <= n; ++i) {
+            tree.insert(i);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        times.push_back(duration.count());
+    }
+
+    void benchmarkSearch(int n, std::vector<double>& times) {
+        BinarySearchTree<int> tree;
+        for (int i = 1; i <= n; ++i) {
+            tree.insert(i);
+        }
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 1; i <= n; ++i) {
+            tree.find(i);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        times.push_back(duration.count());
+    }
+
+    void benchmarkRemove(int n, std::vector<double>& times) {
+        BinarySearchTree<int> tree;
+        for (int i = 1; i <= n; ++i) {
+            tree.insert(i);
+        }
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 1; i <= n; ++i) {
+            tree.remove(i);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        times.push_back(duration.count());
+    }
+
+    void benchmarkOperations(int n, std::vector<double>& times) {
+        BinarySearchTree<int> tree;
+        for (int i = 1; i <= n; ++i) {
+            tree.insert(i);
+        }
+
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 1; i <= n; ++i) {
+            tree.find(i);
+            tree.remove(i);
+            tree.insert(i);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        times.push_back(duration.count());
+    }
+
+    void benchmarkRandomOperations(int n, std::vector<double>& times) {
+        BinarySearchTree<int> tree;
+        std::vector<int> data(n);
+        std::iota(data.begin(), data.end(), 1);
+        std::shuffle(data.begin(), data.end(), std::mt19937(std::random_device()()));
+
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < n; ++i) {
+            tree.insert(data[i]);
+        }
+        for (int i = 0; i < n; ++i) {
+            tree.find(data[i]);
+            tree.remove(data[i]);
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        times.push_back(duration.count());
+    }
+
+    void benchmarkTest()
+    {
+        std::vector<int> sizes = { 10000, 100000, 1000000, 10000000 }; 
+        std::vector<double> insertTimes, searchTimes, removeTimes, operationsTimes, randomOpsTimes;
+
+        for (int n : sizes) {
+            benchmarkInsert(n, insertTimes);
+            benchmarkSearch(n, searchTimes);
+            benchmarkRemove(n, removeTimes);
+            benchmarkOperations(n, operationsTimes);
+            benchmarkRandomOperations(n, randomOpsTimes);
+        }
+
+        std::cout << "Insert Times:\n";
+        for (size_t i = 0; i < sizes.size(); ++i) {
+            std::cout << sizes[i] << " elements: " << insertTimes[i] << " seconds\n";
+        }
+
+        std::cout << "\nSearch Times:\n";
+        for (size_t i = 0; i < sizes.size(); ++i) {
+            std::cout << sizes[i] << " elements: " << searchTimes[i] << " seconds\n";
+        }
+
+        std::cout << "\nRemove Times:\n";
+        for (size_t i = 0; i < sizes.size(); ++i) {
+            std::cout << sizes[i] << " elements: " << removeTimes[i] << " seconds\n";
+        }
+
+        std::cout << "\nOperations Times:\n";
+        for (size_t i = 0; i < sizes.size(); ++i) {
+            std::cout << sizes[i] << " elements: " << operationsTimes[i] << " seconds\n";
+        }
+
+        std::cout << "\nRandom Operations Times:\n";
+        for (size_t i = 0; i < sizes.size(); ++i) {
+            std::cout << sizes[i] << " elements: " << randomOpsTimes[i] << " seconds\n";
+        }
     }
 
 
