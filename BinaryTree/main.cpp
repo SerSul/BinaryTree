@@ -1,20 +1,35 @@
-﻿#include <locale>
-#include "FloatTest.h"
-
-
-#include <iostream>
+﻿#include <iostream>
 #include <functional>
-#include "BinarySearchTree.h" // Убедитесь, что ваш заголовочный файл подключен правильно
+#include "BinarySearchTree.h"
 
 void printMenu() {
     std::cout << "Меню:\n";
     std::cout << "1. Вставить значение\n";
     std::cout << "2. Удалить значение\n";
     std::cout << "3. Найти значение\n";
-    std::cout << "4. Напечатать дерево\n";
-    std::cout << "5. Очистить дерево\n";
-    std::cout << "6. Выйти\n";
+    std::cout << "4. Обходы\n";
+    std::cout << "5. Напечатать дерево\n";
+    std::cout << "6. Очистить дерево\n";
+    std::cout << "7. Извлечь поддерево\n";
+    std::cout << "8. Проверить наличие поддерева\n";
+    std::cout << "9. Проверить наличие элемента\n";
+    std::cout << "10. Map (каждое значение умножается на 2)\n";
+    std::cout << "11. Where (фильтрация элементов)\n";
+    std::cout << "12. Слияние деревьев\n";
+    std::cout << "13. Reduce (сумма всех элементов)\n";
+    std::cout << "14. Выйти\n";
     std::cout << "Выберите опцию: ";
+}
+
+void printTraversalMenu() {
+    std::cout << "\nТипы обходов:\n";
+    std::cout << "1. КЛП (Прямой обход)\n";
+    std::cout << "2. КПЛ (Обратный прямой обход)\n";
+    std::cout << "3. ЛПК (Прямой симметричный обход)\n";
+    std::cout << "4. ЛКП (Обратный симметричный обход)\n";
+    std::cout << "5. ПЛК (Прямой обратный обход)\n";
+    std::cout << "6. ПКЛ (Обратный обратный обход)\n";
+    std::cout << "Выберите тип обхода: ";
 }
 
 int main() {
@@ -58,16 +73,139 @@ int main() {
             break;
 
         case 4:
-            std::cout << "Дерево (прямой обход):\n";
-            bst.printTree();
+            // Обходы
+            do {
+                printTraversalMenu();
+                std::cin >> choice;
+
+                switch (choice) {
+                case 1:
+                    std::cout << "Дерево (КЛП, Прямой обход):\n";
+                    bst.printPreorder();
+                    std::cout << std::endl;
+                    break;
+
+                case 2:
+                    std::cout << "Дерево (КПЛ):\n";
+                    bst.printReversePreorder();
+                    std::cout << std::endl;
+                    break;
+
+                case 3:
+                    std::cout << "Дерево (ЛПК):\n";
+                    bst.printPostorder();
+                    std::cout << std::endl;
+                    break;
+
+                case 4:
+                    std::cout << "Дерево (ЛКП):\n";
+                    bst.printReversePostorder();
+                    std::cout << std::endl;
+                    break;
+
+                case 5:
+                    std::cout << "Дерево (ПЛК):\n";
+                    bst.printInorder();
+                    std::cout << std::endl;
+                    break;
+
+                case 6:
+                    std::cout << "Дерево (ПКЛ):\n";
+                    bst.printReverseInorder();
+                    std::cout << std::endl;
+                    break;
+
+                default:
+                    std::cout << "Неверный выбор. Попробуйте снова.\n";
+                    break;
+                }
+
+                std::cout << std::endl;
+            } while (choice < 1 || choice > 6);
+
             break;
 
         case 5:
+            std::cout << "Дерево:\n";
+            bst.printTree();
+            std::cout << std::endl;
+            break;
+
+        case 6:
             bst.clear();
             std::cout << "Дерево очищено.\n";
             break;
 
-        case 6:
+        case 7:
+            std::cout << "Введите значение корня поддерева для извлечения: ";
+            std::cin >> value;
+            {
+                BinarySearchTree<int> subtree = bst.extractSubtree(value);
+                std::cout << "Извлеченное поддерево:\n";
+                subtree.printTree();
+            }
+            break;
+
+        case 8:
+            std::cout << "Введите значения для проверки поддерева (окончание ввода -1):\n";
+            {
+                BinarySearchTree<int> subtree;
+                while (true) {
+                    std::cin >> value;
+                    if (value == -1) break;
+                    subtree.insert(value);
+                }
+                if (bst.containsSubtree(subtree)) {
+                    std::cout << "Поддерево найдено.\n";
+                }
+                else {
+                    std::cout << "Поддерево не найдено.\n";
+                }
+            }
+            break;
+
+        case 10:
+        {
+            std::cout << "map (каждое значение умножается на 2):\n";
+            BinarySearchTree<int> newTree = bst.map<int>([](int value) { return value * 2; });
+            std::cout << "Новое дерево:\n";
+            newTree.printTree();
+        }
+        break;
+
+        case 11:
+        {
+            std::cout << "where (оставляем только четные значения):\n";
+            BinarySearchTree<int> filteredTree = bst.where([](const int& value) { return value % 2 == 0; });
+            std::cout << "Новое дерево:\n";
+            filteredTree.printTree();
+        }
+        break;
+
+        case 12:
+        {
+            std::cout << "Введите значения для второго дерева для слияния (окончание ввода -1):\n";
+            BinarySearchTree<int> otherTree;
+            while (true) {
+                std::cin >> value;
+                if (value == -1) break;
+                otherTree.insert(value);
+            }
+            BinarySearchTree<int> mergedTree = bst.merge(otherTree);
+            std::cout << "Слитое дерево:\n";
+            mergedTree.printTree();
+        }
+        break;
+
+        case 13:
+        {
+            std::cout << "Reduce (сумма всех элементов):\n";
+            int sum = bst.reduce<int>([](int acc, int value) { return acc + value; });
+            std::cout << "Сумма всех элементов: " << sum << std::endl;
+        }
+        break;
+
+        case 14:
             std::cout << "Выход из программы.\n";
             break;
 
@@ -75,26 +213,9 @@ int main() {
             std::cout << "Неверный выбор. Попробуйте снова.\n";
             break;
         }
+
         std::cout << std::endl;
-    } while (choice != 6);
+    } while (choice != 14);
 
     return 0;
 }
-
-
-
-
-
-
-/*
-int main() {
-    setlocale(LC_ALL, "ru");
-    FloatTest test;
-    test.testFind();
-    test.testRemove();
-    test.testMap();
-    test.testWhere();
-    test.testReduce();
-    return 0;
-}
-*/

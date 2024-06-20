@@ -159,7 +159,7 @@ BinarySearchTree<U> BinarySearchTree<T>::map(std::function<U(T)> func) const {
 
 template <typename T>
 template <typename U>
-U BinarySearchTree<T>::reduce(std::function<U(U, T)> func, U initialValue) const {
+U BinarySearchTree<T>::reduce(std::function<U(U, T)> func) const {
     std::function<U(TreeNode<T>*, U)> reduceFunc = [&](TreeNode<T>* node, U acc) {
         if (node) {
             acc = func(acc, node->data);
@@ -169,34 +169,27 @@ U BinarySearchTree<T>::reduce(std::function<U(U, T)> func, U initialValue) const
         return acc;
         };
 
-    return reduceFunc(root, initialValue);
+    return reduceFunc(root);
 }
 
 template <typename T>
 BinarySearchTree<T> BinarySearchTree<T>::where(std::function<bool(const T&)> predicate) const {
     BinarySearchTree<T> filteredTree;
 
-    std::function<void(TreeNode<T>*, TreeNode<T>*&)> filterFunc = [&](TreeNode<T>* node, TreeNode<T>*& newNode) {
+    std::function<void(TreeNode<T>*)> filterFunc = [&](TreeNode<T>* node) {
         if (node) {
             if (predicate(node->data)) {
-                newNode = new TreeNode<T>(node->data);
-                filterFunc(node->left, newNode->left);
-                filterFunc(node->right, newNode->right);
+                filteredTree.insert(node->data);
             }
-            else {
-                filterFunc(node->left, newNode);
-                filterFunc(node->right, newNode);
-            }
-        }
-        else {
-            newNode = nullptr;
+            filterFunc(node->left);
+            filterFunc(node->right);
         }
         };
 
-    filterFunc(root, filteredTree.root);
-
+    filterFunc(root);
     return filteredTree;
 }
+
 
 
 template <typename T>
@@ -273,5 +266,93 @@ void BinarySearchTree<T>::printReversePostorder(TreeNode<T>* node) {
         std::cout << node->data << " ";
     }
 }
+
+
+template <typename T>
+BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other) const {
+    BinarySearchTree<T> mergedTree;
+
+    std::function<void(TreeNode<T>*, TreeNode<T>*, TreeNode<T>*&)> mergeFunc = [&](TreeNode<T>* node1, TreeNode<T>* node2, TreeNode<T>*& mergedNode) {
+        if (node1 && node2) {
+            mergedNode = new TreeNode<T>(node1->data);
+            mergeFunc(node1->left, node2->left, mergedNode->left);
+            mergeFunc(node1->right, node2->right, mergedNode->right);
+        }
+        else if (node1) {
+            mergedNode = new TreeNode<T>(node1->data);
+            mergeFunc(node1->left, nullptr, mergedNode->left);
+            mergeFunc(node1->right, nullptr, mergedNode->right);
+        }
+        else if (node2) {
+            mergedNode = new TreeNode<T>(node2->data);
+            mergeFunc(nullptr, node2->left, mergedNode->left);
+            mergeFunc(nullptr, node2->right, mergedNode->right);
+        }
+        };
+
+    mergeFunc(root, other.root, mergedTree.root);
+
+    return mergedTree;
+}
+
+
+template <typename T>
+TreeNode<T>* BinarySearchTree<T>::extractSubtreeRecursive(TreeNode<T>*& node, T value) {
+    if (node == nullptr) {
+        return nullptr;
+    }
+
+    TreeNode<T>* extractedSubtree = nullptr;
+
+    if (value < node->data) {
+        extractedSubtree = extractSubtreeRecursive(node->left, value);
+    }
+    else if (value > node->data) {
+        extractedSubtree = extractSubtreeRecursive(node->right, value);
+    }
+    else {
+        extractedSubtree = node;
+        node = nullptr;
+    }
+
+    return extractedSubtree;
+}
+
+template <typename T>
+BinarySearchTree<T> BinarySearchTree<T>::extractSubtree(T value) {
+    BinarySearchTree<T> extractedTree;
+
+    TreeNode<T>* subtreeRoot = extractSubtreeRecursive(root, value);
+    extractedTree.root = subtreeRoot;
+
+    return extractedTree;
+}
+
+
+template <typename T>
+bool BinarySearchTree<T>::containsSubtreeRecursive(TreeNode<T>* mainTree, TreeNode<T>* subtree) {
+    if (subtree == nullptr) {
+        return true; // Empty subtree is always found
+    }
+    if (mainTree == nullptr) {
+        return false; // Main tree is empty, subtree cannot be found
+    }
+
+    if (mainTree->data == subtree->data &&
+        containsSubtreeRecursive(mainTree->left, subtree->left) &&
+        containsSubtreeRecursive(mainTree->right, subtree->right)) {
+        return true;
+    }
+
+    return containsSubtreeRecursive(mainTree->left, subtree) || containsSubtreeRecursive(mainTree->right, subtree);
+}
+
+
+template <typename T>
+bool BinarySearchTree<T>::containsSubtree(const BinarySearchTree<T>& subtree)  {
+    return containsSubtreeRecursive(root, subtree.root);
+}
+
+
 
 #endif // BINARYSEARCHTREE_TPP
