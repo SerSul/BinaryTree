@@ -1,18 +1,31 @@
 #ifndef BINARYSEARCHTREE_H
 #define BINARYSEARCHTREE_H
 
-#include "TreeNode.h"
 #include <iostream>
 #include <stdexcept>
 #include <functional>
-#include <string> 
+#include <string>
+#include "Stack.h"
+#include "TreeNode.h"
+
+
+template <typename T>
+struct TreeNode {
+    T data;
+    TreeNode* left;
+    TreeNode* right;
+    int height;
+
+    TreeNode(T value)
+        : data(value), left(nullptr), right(nullptr), height(1) {}
+};
 
 template <typename T>
 class BinarySearchTree {
 private:
-    TreeNode<T>* root;
 
-    // Рекурсивные функции для работы с деревом
+    TreeNode<T>* root;
+    
     void insertRecursive(TreeNode<T>*& node, T value);
     TreeNode<T>* findMin(TreeNode<T>* node);
     TreeNode<T>* removeRecursive(TreeNode<T>*& node, T value);
@@ -23,10 +36,13 @@ private:
     void destroy(TreeNode<T>* node);
     void printTree(TreeNode<T>* node, int indent);
 
+
 public:
+
     BinarySearchTree() : root(nullptr) {}
     ~BinarySearchTree() { clear(); }
 
+    TreeNode<T>* getRoot() { return this.root; };
     // Публичные функции для работы с деревом
     void insert(T value);
     void remove(T value);
@@ -47,6 +63,7 @@ public:
     void printReversePostorder();
     void printReversePostorder(TreeNode<T>* node);
 
+
     // Функции для трансформации дерева
     template <typename U>
     BinarySearchTree<U> map(std::function<U(T)> func) const;
@@ -56,7 +73,9 @@ public:
 
     BinarySearchTree<T> where(std::function<bool(const T&)> predicate) const;
 
-    BinarySearchTree<T> merge(const BinarySearchTree<T>& other) const;
+    BinarySearchTree<T> merge(const BinarySearchTree<T>& other) ;
+
+
 
     // Функции для работы с поддеревьями
     BinarySearchTree<T> extractSubtree(T value);

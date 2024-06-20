@@ -109,6 +109,7 @@ void BinarySearchTree<T>::printTree(TreeNode<T>* node, int indent) {
     }
 }
 
+
 template <typename T>
 void BinarySearchTree<T>::insert(T value) {
     insertRecursive(root, value);
@@ -270,32 +271,63 @@ void BinarySearchTree<T>::printReversePostorder(TreeNode<T>* node) {
 }
 
 
+
 template <typename T>
-BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other) const {
+BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other) {
     BinarySearchTree<T> mergedTree;
 
-    std::function<void(TreeNode<T>*, TreeNode<T>*, TreeNode<T>*&)> mergeFunc = [&](TreeNode<T>* node1, TreeNode<T>* node2, TreeNode<T>*& mergedNode) {
-        if (node1 && node2) {
-            mergedNode = new TreeNode<T>(node1->data);
-            mergeFunc(node1->left, node2->left, mergedNode->left);
-            mergeFunc(node1->right, node2->right, mergedNode->right);
-        }
-        else if (node1) {
-            mergedNode = new TreeNode<T>(node1->data);
-            mergeFunc(node1->left, nullptr, mergedNode->left);
-            mergeFunc(node1->right, nullptr, mergedNode->right);
-        }
-        else if (node2) {
-            mergedNode = new TreeNode<T>(node2->data);
-            mergeFunc(nullptr, node2->left, mergedNode->left);
-            mergeFunc(nullptr, node2->right, mergedNode->right);
-        }
-        };
+    Stack<TreeNode<T>*> stack1, stack2;
+    TreeNode<T>* current1 = root;
+    TreeNode<T>* current2 = other.root;
 
-    mergeFunc(root, other.root, mergedTree.root);
+    while (current1 != nullptr || !stack1.empty() || current2 != nullptr || !stack2.empty()) {
+        while (current1 != nullptr) {
+            stack1.push(current1);
+            current1 = current1->left;
+        }
+
+        while (current2 != nullptr) {
+            stack2.push(current2);
+            current2 = current2->left;
+        }
+
+        if (!stack1.empty() && !stack2.empty()) {
+            current1 = stack1.top();
+            current2 = stack2.top();
+
+            if (current1->data < current2->data) {
+                mergedTree.insert(current1->data);
+                stack1.pop();
+                current1 = current1->right;
+                current2 = nullptr;
+            }
+            else {
+                mergedTree.insert(current2->data);
+                stack2.pop();
+                current2 = current2->right;
+                current1 = nullptr;
+            }
+        }
+        else if (!stack1.empty()) {
+            current1 = stack1.top();
+            mergedTree.insert(current1->data);
+            stack1.pop();
+            current1 = current1->right;
+        }
+        else if (!stack2.empty()) {
+            current2 = stack2.top();
+            mergedTree.insert(current2->data);
+            stack2.pop();
+            current2 = current2->right;
+        }
+    }
 
     return mergedTree;
 }
+
+
+
+
 
 
 template <typename T>
