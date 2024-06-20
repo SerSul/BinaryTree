@@ -81,15 +81,16 @@ public:
     BinarySearchTree<T> extractSubtree(T value);
     bool containsSubtree(const BinarySearchTree<T>& subtree);
 
-    // Балансировка дерева
+    void balance(TreeNode<T>*& node);
+
     int height(TreeNode<T>* node);
+
     int getBalance(TreeNode<T>* node);
 
-    TreeNode<T>* balance(TreeNode<T>* node);
+    TreeNode<T>* rightRotate(TreeNode<T>* y);
 
-    TreeNode<T>* rotateLeft(TreeNode<T>* y);
+    TreeNode<T>* leftRotate(TreeNode<T>* x);
 
-    TreeNode<T>* rotateRight(TreeNode<T>* y);
 
 };
 

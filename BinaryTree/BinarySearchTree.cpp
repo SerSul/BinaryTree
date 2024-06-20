@@ -18,6 +18,10 @@ void BinarySearchTree<T>::insertRecursive(TreeNode<T>*& node, T value) {
         else {
             throw std::invalid_argument("Дубликаты значений в бинарном дереве поиска не допускаются.");
         }
+
+        node->height = 1 + std::max(height(node->left), height(node->right));
+
+        balance(node);
     }
 }
 
@@ -395,65 +399,81 @@ bool BinarySearchTree<T>::containsSubtree(const BinarySearchTree<T>& subtree)  {
     return containsSubtreeRecursive(root, subtree.root);
 }
 
+
+template <typename T>
+void BinarySearchTree<T>::balance(TreeNode<T>*& node) {
+    // Проверяем баланс и выполняем повороты при необходимости
+    int balance = getBalance(node);
+
+    // Левый левый случай
+    if (balance > 1 && getBalance(node->left) >= 0) {
+        node = rightRotate(node);
+    }
+    // Правый правый случай
+    else if (balance < -1 && getBalance(node->right) <= 0) {
+        node = leftRotate(node);
+    }
+    // Левый правый случай
+    else if (balance > 1 && getBalance(node->left) < 0) {
+        node->left = leftRotate(node->left);
+        node = rightRotate(node);
+    }
+    // Правый левый случай
+    else if (balance < -1 && getBalance(node->right) > 0) {
+        node->right = rightRotate(node->right);
+        node = leftRotate(node);
+    }
+}
+
 template <typename T>
 int BinarySearchTree<T>::height(TreeNode<T>* node) {
-    return node ? node->height : 0;
+    if (node == nullptr) {
+        return 0;
+    }
+    return node->height;
 }
 
 template <typename T>
 int BinarySearchTree<T>::getBalance(TreeNode<T>* node) {
-    return node ? height(node->left) - height(node->right) : 0;
-}
-
-template <typename T>
-TreeNode<T>* BinarySearchTree<T>::balance(TreeNode<T>* node) {
-    int balanceFactor = getBalance(node);
-
-    if (balanceFactor > 1) {
-        if (getBalance(node->left) < 0)
-            node->left = rotateLeft(node->left);
-        return rotateRight(node);
+    if (node == nullptr) {
+        return 0;
     }
-
-    if (balanceFactor < -1) {
-        if (getBalance(node->right) > 0)
-            node->right = rotateRight(node->right);
-        return rotateLeft(node);
-    }
-
-    return node;
+    return height(node->left) - height(node->right);
 }
 
 template <typename T>
-TreeNode<T>* BinarySearchTree<T>::rotateLeft(TreeNode<T>* y) {
-    TreeNode<T>* x = y->right;
-    TreeNode<T>* T2 = x->left;
-
-    x->left = y;
-    y->right = T2;
-
-    y->height = std::max(height(y->left), height(y->right)) + 1;
-    x->height = std::max(height(x->left), height(x->right)) + 1;
-
-    return x;
-}
-
-template <typename T>
-TreeNode<T>* BinarySearchTree<T>::rotateRight(TreeNode<T>* y) {
+TreeNode<T>* BinarySearchTree<T>::rightRotate(TreeNode<T>* y) {
     TreeNode<T>* x = y->left;
     TreeNode<T>* T2 = x->right;
 
+    // Проворот
     x->right = y;
     y->left = T2;
 
+    // Обновление высоты
     y->height = std::max(height(y->left), height(y->right)) + 1;
     x->height = std::max(height(x->left), height(x->right)) + 1;
 
+    // Возвращаем новый корень
     return x;
 }
 
+template <typename T>
+TreeNode<T>* BinarySearchTree<T>::leftRotate(TreeNode<T>* x) {
+    TreeNode<T>* y = x->right;
+    TreeNode<T>* T2 = y->left;
 
+    // Проворот
+    y->left = x;
+    x->right = T2;
 
+    // Обновление высоты
+    x->height = std::max(height(x->left), height(x->right)) + 1;
+    y->height = std::max(height(y->left), height(y->right)) + 1;
+
+    // Возвращаем новый корень
+    return y;
+}
 
 
 #endif // BINARYSEARCHTREE_TPP

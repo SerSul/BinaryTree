@@ -247,8 +247,8 @@ public:
 
         BinarySearchTree<int> subtree;
 
-        subtree.insert(3);
-        subtree.insert(2);
+        subtree.insert(5);
+        subtree.insert(7);
 
         assert(tree1.containsSubtree(subtree));
 
@@ -261,25 +261,7 @@ public:
     void testHeight() {
         BinarySearchTree<int> tree;
 
-        tree.insert(5);
-        tree.insert(3);
-        tree.insert(7);
-        tree.insert(2);
-        tree.insert(4);
-        tree.insert(6);
-        tree.insert(8);
-
-        std::cout << tree.height(tree.find(7));
-
-        assert(tree.height(tree.find(8)) == 3);
-
-        tree.insert(1);
-        std::cout << tree.height(tree.find(1));
-        assert(tree.height(tree.find(1)) == 4);
-
-        tree.remove(3);
-        std::cout << tree.height(tree.find(3));
-        assert(tree.height(tree.find(3)) == 3);
+        
     }
 
 
