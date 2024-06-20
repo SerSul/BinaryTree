@@ -214,6 +214,7 @@ int main() {
             IntBinarySearchTreeTest test;
             test.runAllTests();
         }
+        break;
         case 14:
             IntBinarySearchTreeTest test;
             test.benchmarkTest();

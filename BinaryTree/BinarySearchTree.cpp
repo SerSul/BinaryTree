@@ -309,7 +309,6 @@ void BinarySearchTree<T>::printReversePostorder(TreeNode<T>* node) {
 
 template <typename T>
 BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other) {
-    // Слияние двух деревьев
     BinarySearchTree<T> mergedTree;
 
     Stack<TreeNode<T>*> stack1, stack2;
@@ -332,13 +331,17 @@ BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other)
             current2 = stack2.top();
 
             if (current1->data < current2->data) {
-                mergedTree.insert(current1->data);
+                if (!mergedTree.find(current1->data)) {
+                    mergedTree.insert(current1->data);
+                }
                 stack1.pop();
                 current1 = current1->right;
                 current2 = nullptr;
             }
             else {
-                mergedTree.insert(current2->data);
+                if (!mergedTree.find(current2->data)) {
+                    mergedTree.insert(current2->data);
+                }
                 stack2.pop();
                 current2 = current2->right;
                 current1 = nullptr;
@@ -346,13 +349,17 @@ BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other)
         }
         else if (!stack1.empty()) {
             current1 = stack1.top();
-            mergedTree.insert(current1->data);
+            if (!mergedTree.find(current1->data)) {
+                mergedTree.insert(current1->data);
+            }
             stack1.pop();
             current1 = current1->right;
         }
         else if (!stack2.empty()) {
             current2 = stack2.top();
-            mergedTree.insert(current2->data);
+            if (!mergedTree.find(current2->data)) {
+                mergedTree.insert(current2->data);
+            }
             stack2.pop();
             current2 = current2->right;
         }
