@@ -29,7 +29,6 @@ public:
         assert(node != nullptr);
         assert(node->data == 8);
 
-        // Тесты для случаев, когда узел не найден
         node = tree.find(1);
         assert(node == nullptr);
 
@@ -60,7 +59,6 @@ public:
         assert(node != nullptr);
         assert(node->data == 7);
 
-        // Повторное удаление
         tree.remove(7);
         node = tree.find(7);
         assert(node == nullptr);
@@ -94,7 +92,6 @@ public:
         assert(newNode != nullptr);
         assert(newNode->data == 14);
 
-        // Тесты для случаев, когда узел не найден
         newNode = newTree.find(5);
         assert(newNode == nullptr);
 
@@ -130,7 +127,6 @@ public:
         assert(filteredNode != nullptr);
         assert(filteredNode->data == 8);
 
-        // Проверка отсутствия элементов, которые не соответствуют предикату
         filteredNode = filteredTree.find(3);
         assert(filteredNode == nullptr);
 
@@ -169,7 +165,6 @@ public:
         tree.insert(6);
         tree.insert(8);
 
-        // Печать дерева в различных порядках
         std::cout << "Inorder traversal: ";
         tree.printInorder();
         std::cout << "\n";

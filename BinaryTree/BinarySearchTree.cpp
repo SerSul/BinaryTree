@@ -5,6 +5,7 @@
 
 template <typename T>
 void BinarySearchTree<T>::insertRecursive(TreeNode<T>*& node, T value) {
+    // Вставка значения в дерево
     if (node == nullptr) {
         node = new TreeNode<T>(value);
     }
@@ -19,14 +20,17 @@ void BinarySearchTree<T>::insertRecursive(TreeNode<T>*& node, T value) {
             throw std::invalid_argument("Дубликаты значений в бинарном дереве поиска не допускаются.");
         }
 
+        // Обновление высоты узла
         node->height = 1 + std::max(height(node->left), height(node->right));
 
+        // Балансировка дерева
         balance(node);
     }
 }
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::findMin(TreeNode<T>* node) {
+    // Поиск минимального значения в дереве
     if (node == nullptr) return nullptr;
     while (node->left != nullptr) {
         node = node->left;
@@ -36,6 +40,7 @@ TreeNode<T>* BinarySearchTree<T>::findMin(TreeNode<T>* node) {
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::removeRecursive(TreeNode<T>*& node, T value) {
+    // Удаление значения из дерева
     if (node == nullptr) return nullptr;
 
     if (value < node->data) {
@@ -70,6 +75,7 @@ TreeNode<T>* BinarySearchTree<T>::removeRecursive(TreeNode<T>*& node, T value) {
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::findRecursive(TreeNode<T>* node, T value) {
+    // Поиск значения в дереве
     if (node == nullptr) return nullptr;
 
     if (value < node->data) {
@@ -85,6 +91,7 @@ TreeNode<T>* BinarySearchTree<T>::findRecursive(TreeNode<T>* node, T value) {
 
 template <typename T>
 void BinarySearchTree<T>::printInorder(TreeNode<T>* node) {
+    // Печать дерева в порядке inorder
     if (node != nullptr) {
         printInorder(node->left);
         std::cout << node->data << " ";
@@ -94,6 +101,7 @@ void BinarySearchTree<T>::printInorder(TreeNode<T>* node) {
 
 template <typename T>
 void BinarySearchTree<T>::destroy(TreeNode<T>* node) {
+    // Удаление дерева
     if (node != nullptr) {
         destroy(node->left);
         destroy(node->right);
@@ -103,6 +111,7 @@ void BinarySearchTree<T>::destroy(TreeNode<T>* node) {
 
 template <typename T>
 void BinarySearchTree<T>::printTree(TreeNode<T>* node, int indent) {
+    // Печать дерева в виде дерева
     if (node != nullptr) {
         printTree(node->right, indent + 1);
         for (int i = 0; i < indent; ++i) {
@@ -113,29 +122,33 @@ void BinarySearchTree<T>::printTree(TreeNode<T>* node, int indent) {
     }
 }
 
-
 template <typename T>
 void BinarySearchTree<T>::insert(T value) {
+    // Вставка значения в дерево
     insertRecursive(root, value);
 }
 
 template <typename T>
 void BinarySearchTree<T>::remove(T value) {
+    // Удаление значения из дерева
     root = removeRecursive(root, value);
 }
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::find(T value) {
+    // Поиск значения в дереве
     return findRecursive(root, value);
 }
 
 template <typename T>
 void BinarySearchTree<T>::printTree() {
+    // Печать дерева
     printTree(root, 0);
 }
 
 template <typename T>
 void BinarySearchTree<T>::clear() {
+    // Очистка дерева
     destroy(root);
     root = nullptr;
 }
@@ -143,6 +156,7 @@ void BinarySearchTree<T>::clear() {
 template <typename T>
 template <typename U>
 BinarySearchTree<U> BinarySearchTree<T>::map(std::function<U(T)> func) const {
+    // Преобразование дерева с помощью функции
     BinarySearchTree<U> newTree;
 
     std::function<void(TreeNode<T>*, TreeNode<U>*&)> mapFunc = [&](TreeNode<T>* node, TreeNode<U>*& newNode) {
@@ -165,6 +179,7 @@ BinarySearchTree<U> BinarySearchTree<T>::map(std::function<U(T)> func) const {
 template <typename T>
 template <typename U>
 U BinarySearchTree<T>::reduce(std::function<U(U, T)> func, U initialValue) const {
+    // Сокращение дерева с помощью функции
     std::function<U(TreeNode<T>*, U)> reduceFunc = [&](TreeNode<T>* node, U acc) {
         if (node) {
             acc = func(acc, node->data);
@@ -179,6 +194,7 @@ U BinarySearchTree<T>::reduce(std::function<U(U, T)> func, U initialValue) const
 
 template <typename T>
 BinarySearchTree<T> BinarySearchTree<T>::where(std::function<bool(const T&)> predicate) const {
+    // Фильтрация дерева с помощью предиката
     BinarySearchTree<T> filteredTree;
 
     std::function<void(TreeNode<T>*)> filterFunc = [&](TreeNode<T>* node) {
@@ -189,21 +205,21 @@ BinarySearchTree<T> BinarySearchTree<T>::where(std::function<bool(const T&)> pre
             filterFunc(node->left);
             filterFunc(node->right);
         }
-    };
+        };
 
     filterFunc(root);
     return filteredTree;
 }
 
-
-
 template <typename T>
 void BinarySearchTree<T>::printPreorder() {
+    // Печать дерева в порядке preorder
     printPreorder(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::printPreorder(TreeNode<T>* node) {
+    // Печать дерева в порядке preorder
     if (node != nullptr) {
         std::cout << node->data << " ";
         printPreorder(node->left);
@@ -213,11 +229,13 @@ void BinarySearchTree<T>::printPreorder(TreeNode<T>* node) {
 
 template <typename T>
 void BinarySearchTree<T>::printPostorder() {
+    // Печать дерева в порядке postorder
     printPostorder(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::printPostorder(TreeNode<T>* node) {
+    // Печать дерева в порядке postorder
     if (node != nullptr) {
         printPostorder(node->left);
         printPostorder(node->right);
@@ -227,16 +245,19 @@ void BinarySearchTree<T>::printPostorder(TreeNode<T>* node) {
 
 template <typename T>
 void BinarySearchTree<T>::printInorder() {
+    // Печать дерева в порядке inorder
     printInorder(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::printReverseInorder() {
+    // Печать дерева в порядке reverse inorder
     printReverseInorder(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::printReverseInorder(TreeNode<T>* node) {
+    // Печать дерева в порядке reverse inorder
     if (node != nullptr) {
         printReverseInorder(node->right);
         std::cout << node->data << " ";
@@ -246,11 +267,13 @@ void BinarySearchTree<T>::printReverseInorder(TreeNode<T>* node) {
 
 template <typename T>
 void BinarySearchTree<T>::printReversePreorder() {
+    // Печать дерева в порядке reverse preorder
     printReversePreorder(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::printReversePreorder(TreeNode<T>* node) {
+    // Печать дерева в порядке reverse preorder
     if (node != nullptr) {
         std::cout << node->data << " ";
         printReversePreorder(node->right);
@@ -260,22 +283,23 @@ void BinarySearchTree<T>::printReversePreorder(TreeNode<T>* node) {
 
 template <typename T>
 void BinarySearchTree<T>::printReversePostorder() {
+    // Печать дерева в порядке reverse postorder
     printReversePostorder(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::printReversePostorder(TreeNode<T>* node) {
+    // Печать дерева в порядке reverse postorder
     if (node != nullptr) {
-        printReversePostorder(node->left);
         printReversePostorder(node->right);
+        printReversePostorder(node->left);
         std::cout << node->data << " ";
     }
 }
 
-
-
 template <typename T>
 BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other) {
+    // Слияние двух деревьев
     BinarySearchTree<T> mergedTree;
 
     Stack<TreeNode<T>*> stack1, stack2;
@@ -327,13 +351,9 @@ BinarySearchTree<T> BinarySearchTree<T>::merge(const BinarySearchTree<T>& other)
     return mergedTree;
 }
 
-
-
-
-
-
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::extractSubtreeRecursive(TreeNode<T>*& node, T value) {
+    // Извлечение поддерева
     if (node == nullptr) {
         return nullptr;
     }
@@ -356,6 +376,7 @@ TreeNode<T>* BinarySearchTree<T>::extractSubtreeRecursive(TreeNode<T>*& node, T 
 
 template <typename T>
 BinarySearchTree<T> BinarySearchTree<T>::extractSubtree(T value) {
+    // Извлечение поддерева
     BinarySearchTree<T> extractedTree;
 
     TreeNode<T>* subtreeRoot = extractSubtreeRecursive(root, value);
@@ -364,9 +385,9 @@ BinarySearchTree<T> BinarySearchTree<T>::extractSubtree(T value) {
     return extractedTree;
 }
 
-
 template <typename T>
 bool BinarySearchTree<T>::containsSubtreeRecursive(TreeNode<T>* mainTree, TreeNode<T>* subtree) {
+    // Проверка наличия поддерева
     if (subtree == nullptr) {
         return true;
     }
@@ -382,6 +403,7 @@ bool BinarySearchTree<T>::containsSubtreeRecursive(TreeNode<T>* mainTree, TreeNo
 
 template <typename T>
 bool BinarySearchTree<T>::areIdentical(TreeNode<T>* tree1, TreeNode<T>* tree2) {
+    // Проверка идентичности деревьев
     if (tree1 == nullptr && tree2 == nullptr) {
         return true;
     }
@@ -393,32 +415,27 @@ bool BinarySearchTree<T>::areIdentical(TreeNode<T>* tree1, TreeNode<T>* tree2) {
         areIdentical(tree1->right, tree2->right);
 }
 
-
 template <typename T>
-bool BinarySearchTree<T>::containsSubtree(const BinarySearchTree<T>& subtree)  {
+bool BinarySearchTree<T>::containsSubtree(const BinarySearchTree<T>& subtree) {
+    // Проверка наличия поддерева
     return containsSubtreeRecursive(root, subtree.root);
 }
 
-
 template <typename T>
 void BinarySearchTree<T>::balance(TreeNode<T>*& node) {
-    // Проверяем баланс и выполняем повороты при необходимости
+    // Балансировка дерева
     int balance = getBalance(node);
 
-    // Левый левый случай
     if (balance > 1 && getBalance(node->left) >= 0) {
         node = rightRotate(node);
     }
-    // Правый правый случай
     else if (balance < -1 && getBalance(node->right) <= 0) {
         node = leftRotate(node);
     }
-    // Левый правый случай
     else if (balance > 1 && getBalance(node->left) < 0) {
         node->left = leftRotate(node->left);
         node = rightRotate(node);
     }
-    // Правый левый случай
     else if (balance < -1 && getBalance(node->right) > 0) {
         node->right = rightRotate(node->right);
         node = leftRotate(node);
@@ -427,6 +444,7 @@ void BinarySearchTree<T>::balance(TreeNode<T>*& node) {
 
 template <typename T>
 int BinarySearchTree<T>::height(TreeNode<T>* node) {
+    // Высота дерева
     if (node == nullptr) {
         return 0;
     }
@@ -435,6 +453,7 @@ int BinarySearchTree<T>::height(TreeNode<T>* node) {
 
 template <typename T>
 int BinarySearchTree<T>::getBalance(TreeNode<T>* node) {
+    // Баланс дерева
     if (node == nullptr) {
         return 0;
     }
@@ -443,37 +462,32 @@ int BinarySearchTree<T>::getBalance(TreeNode<T>* node) {
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::rightRotate(TreeNode<T>* y) {
+    // Правый поворот
     TreeNode<T>* x = y->left;
     TreeNode<T>* T2 = x->right;
 
-    // Проворот
     x->right = y;
     y->left = T2;
 
-    // Обновление высоты
     y->height = std::max(height(y->left), height(y->right)) + 1;
     x->height = std::max(height(x->left), height(x->right)) + 1;
 
-    // Возвращаем новый корень
     return x;
 }
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::leftRotate(TreeNode<T>* x) {
+    // Левый поворот
     TreeNode<T>* y = x->right;
     TreeNode<T>* T2 = y->left;
 
-    // Проворот
     y->left = x;
     x->right = T2;
 
-    // Обновление высоты
     x->height = std::max(height(x->left), height(x->right)) + 1;
     y->height = std::max(height(y->left), height(y->right)) + 1;
 
-    // Возвращаем новый корень
     return y;
 }
-
 
 #endif // BINARYSEARCHTREE_TPP
