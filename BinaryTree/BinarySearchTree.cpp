@@ -332,10 +332,10 @@ BinarySearchTree<T> BinarySearchTree<T>::extractSubtree(T value) {
 template <typename T>
 bool BinarySearchTree<T>::containsSubtreeRecursive(TreeNode<T>* mainTree, TreeNode<T>* subtree) {
     if (subtree == nullptr) {
-        return true; // Empty subtree is always found
+        return true;
     }
     if (mainTree == nullptr) {
-        return false; // Main tree is empty, subtree cannot be found
+        return false;
     }
 
     if (mainTree->data == subtree->data &&

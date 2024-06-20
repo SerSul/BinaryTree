@@ -15,12 +15,11 @@ void printMenu() {
     std::cout << "6. Очистить дерево\n";
     std::cout << "7. Извлечь поддерево\n";
     std::cout << "8. Проверить наличие поддерева\n";
-    std::cout << "9. Проверить наличие элемента\n";
-    std::cout << "10. Map (каждое значение умножается на 2)\n";
-    std::cout << "11. Where (фильтрация элементов)\n";
-    std::cout << "12. Слияние деревьев\n";
-    std::cout << "13. Reduce (сумма всех элементов)\n";
-    std::cout << "14. Выйти\n";
+    std::cout << "9. Map (каждое значение умножается на 2)\n";
+    std::cout << "10. Where (фильтрация элементов)\n";
+    std::cout << "11. Слияние деревьев\n";
+    std::cout << "12. Reduce (сумма всех элементов)\n";
+    std::cout << "13. Выйти\n";
     std::cout << "Выберите опцию: ";
 }
 
@@ -168,7 +167,7 @@ int main() {
             }
             break;
 
-        case 10:
+        case 9:
         {
             std::cout << "map (каждое значение умножается на 2):\n";
             BinarySearchTree<DataType> newTree = bst.map<DataType>([](DataType value) { return value * 2; });
@@ -177,7 +176,7 @@ int main() {
         }
         break;
 
-        case 11:
+        case 10:
         {
             std::cout << "where (оставляем только четные значения):\n";
             BinarySearchTree<DataType> filteredTree = bst.where([](const DataType& value) { return value > 4; });
@@ -186,7 +185,7 @@ int main() {
         }
         break;
 
-        case 12:
+        case 11:
         {
             std::cout << "Введите значения для второго дерева для слияния (окончание ввода -1):\n";
             BinarySearchTree<DataType> otherTree;
@@ -201,7 +200,7 @@ int main() {
         }
         break;
 
-        case 13:
+        case 12:
         {
             std::cout << "Reduce (сумма всех элементов):\n";
             DataType sum = bst.reduce<DataType>([](DataType acc, DataType value) { return acc + value; }, 0);
@@ -209,7 +208,7 @@ int main() {
         }
         break;
 
-        case 14:
+        case 13:
             std::cout << "Выход из программы.\n";
             break;
 
@@ -219,7 +218,7 @@ int main() {
         }
 
         std::cout << std::endl;
-    } while (choice != 14);
+    } while (choice != 13);
 
     return 0;
 }
