@@ -2,6 +2,9 @@
 #include <functional>
 #include "BinarySearchTree.h"
 
+// Тип данных в дереве
+typedef float DataType;
+
 void printMenu() {
     std::cout << "Меню:\n";
     std::cout << "1. Вставить значение\n";
@@ -34,8 +37,9 @@ void printTraversalMenu() {
 
 int main() {
     setlocale(LC_ALL, "ru");
-    BinarySearchTree<int> bst;
-    int choice, value;
+    BinarySearchTree<DataType> bst;
+    int choice;
+    DataType value;
 
     do {
         printMenu();
@@ -140,7 +144,7 @@ int main() {
             std::cout << "Введите значение корня поддерева для извлечения: ";
             std::cin >> value;
             {
-                BinarySearchTree<int> subtree = bst.extractSubtree(value);
+                BinarySearchTree<DataType> subtree = bst.extractSubtree(value);
                 std::cout << "Извлеченное поддерево:\n";
                 subtree.printTree();
             }
@@ -149,7 +153,7 @@ int main() {
         case 8:
             std::cout << "Введите значения для проверки поддерева (окончание ввода -1):\n";
             {
-                BinarySearchTree<int> subtree;
+                BinarySearchTree<DataType> subtree;
                 while (true) {
                     std::cin >> value;
                     if (value == -1) break;
@@ -167,7 +171,7 @@ int main() {
         case 10:
         {
             std::cout << "map (каждое значение умножается на 2):\n";
-            BinarySearchTree<int> newTree = bst.map<int>([](int value) { return value * 2; });
+            BinarySearchTree<DataType> newTree = bst.map<DataType>([](DataType value) { return value * 2; });
             std::cout << "Новое дерево:\n";
             newTree.printTree();
         }
@@ -176,7 +180,7 @@ int main() {
         case 11:
         {
             std::cout << "where (оставляем только четные значения):\n";
-            BinarySearchTree<int> filteredTree = bst.where([](const int& value) { return value % 2 == 0; });
+            BinarySearchTree<DataType> filteredTree = bst.where([](const DataType& value) { return value > 4; });
             std::cout << "Новое дерево:\n";
             filteredTree.printTree();
         }
@@ -185,13 +189,13 @@ int main() {
         case 12:
         {
             std::cout << "Введите значения для второго дерева для слияния (окончание ввода -1):\n";
-            BinarySearchTree<int> otherTree;
+            BinarySearchTree<DataType> otherTree;
             while (true) {
                 std::cin >> value;
                 if (value == -1) break;
                 otherTree.insert(value);
             }
-            BinarySearchTree<int> mergedTree = bst.merge(otherTree);
+            BinarySearchTree<DataType> mergedTree = bst.merge(otherTree);
             std::cout << "Слитое дерево:\n";
             mergedTree.printTree();
         }
@@ -200,7 +204,7 @@ int main() {
         case 13:
         {
             std::cout << "Reduce (сумма всех элементов):\n";
-            int sum = bst.reduce<int>([](int acc, int value) { return acc + value; }, 0);
+            DataType sum = bst.reduce<DataType>([](DataType acc, DataType value) { return acc + value; }, 0);
             std::cout << "Сумма всех элементов: " << sum << std::endl;
         }
         break;
