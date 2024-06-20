@@ -47,7 +47,7 @@ public:
     BinarySearchTree<U> map(std::function<U(T)> func) const;
 
     template <typename U>
-    U reduce(std::function<U(U, T)> func) const;
+    U reduce(std::function<U(U, T)> func, U initialValue) const;
 
     BinarySearchTree<T> where(std::function<bool(const T&)> predicate) const;
 

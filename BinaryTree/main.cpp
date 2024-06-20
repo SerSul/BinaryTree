@@ -200,7 +200,7 @@ int main() {
         case 13:
         {
             std::cout << "Reduce (сумма всех элементов):\n";
-            int sum = bst.reduce<int>([](int acc, int value) { return acc + value; });
+            int sum = bst.reduce<int>([](int acc, int value) { return acc + value; }, 0);
             std::cout << "Сумма всех элементов: " << sum << std::endl;
         }
         break;

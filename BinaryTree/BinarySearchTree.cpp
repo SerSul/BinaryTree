@@ -159,7 +159,7 @@ BinarySearchTree<U> BinarySearchTree<T>::map(std::function<U(T)> func) const {
 
 template <typename T>
 template <typename U>
-U BinarySearchTree<T>::reduce(std::function<U(U, T)> func) const {
+U BinarySearchTree<T>::reduce(std::function<U(U, T)> func, U initialValue) const {
     std::function<U(TreeNode<T>*, U)> reduceFunc = [&](TreeNode<T>* node, U acc) {
         if (node) {
             acc = func(acc, node->data);
@@ -169,7 +169,7 @@ U BinarySearchTree<T>::reduce(std::function<U(U, T)> func) const {
         return acc;
         };
 
-    return reduceFunc(root);
+    return reduceFunc(root, initialValue);
 }
 
 template <typename T>
@@ -184,7 +184,7 @@ BinarySearchTree<T> BinarySearchTree<T>::where(std::function<bool(const T&)> pre
             filterFunc(node->left);
             filterFunc(node->right);
         }
-        };
+    };
 
     filterFunc(root);
     return filteredTree;
