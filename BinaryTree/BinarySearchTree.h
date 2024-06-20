@@ -6,7 +6,6 @@
 #include <functional>
 #include <string>
 #include "Stack.h"
-#include "TreeNode.h"
 
 
 template <typename T>
@@ -32,6 +31,7 @@ private:
     TreeNode<T>* findRecursive(TreeNode<T>* node, T value);
     TreeNode<T>* extractSubtreeRecursive(TreeNode<T>*& node, T value);
     bool containsSubtreeRecursive(TreeNode<T>* mainTree, TreeNode<T>* subtree);
+    bool areIdentical(TreeNode<T>* tree1, TreeNode<T>* tree2);
     void printInorder(TreeNode<T>* node);
     void destroy(TreeNode<T>* node);
     void printTree(TreeNode<T>* node, int indent);
@@ -82,11 +82,14 @@ public:
     bool containsSubtree(const BinarySearchTree<T>& subtree);
 
     // Балансировка дерева
-    void rotateLeft(TreeNode<T>*& node);
-    void rotateRight(TreeNode<T>*& node);
     int height(TreeNode<T>* node);
     int getBalance(TreeNode<T>* node);
-    void balance(TreeNode<T>*& node);
+
+    TreeNode<T>* balance(TreeNode<T>* node);
+
+    TreeNode<T>* rotateLeft(TreeNode<T>* y);
+
+    TreeNode<T>* rotateRight(TreeNode<T>* y);
 
 };
 

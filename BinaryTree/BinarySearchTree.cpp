@@ -113,13 +113,11 @@ void BinarySearchTree<T>::printTree(TreeNode<T>* node, int indent) {
 template <typename T>
 void BinarySearchTree<T>::insert(T value) {
     insertRecursive(root, value);
-    balance(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::remove(T value) {
     root = removeRecursive(root, value);
-    balance(root);
 }
 
 template <typename T>
@@ -372,13 +370,23 @@ bool BinarySearchTree<T>::containsSubtreeRecursive(TreeNode<T>* mainTree, TreeNo
         return false;
     }
 
-    if (mainTree->data == subtree->data &&
-        containsSubtreeRecursive(mainTree->left, subtree->left) &&
-        containsSubtreeRecursive(mainTree->right, subtree->right)) {
+    if (areIdentical(mainTree, subtree)) {
         return true;
     }
-
     return containsSubtreeRecursive(mainTree->left, subtree) || containsSubtreeRecursive(mainTree->right, subtree);
+}
+
+template <typename T>
+bool BinarySearchTree<T>::areIdentical(TreeNode<T>* tree1, TreeNode<T>* tree2) {
+    if (tree1 == nullptr && tree2 == nullptr) {
+        return true;
+    }
+    if (tree1 == nullptr || tree2 == nullptr) {
+        return false;
+    }
+    return tree1->data == tree2->data &&
+        areIdentical(tree1->left, tree2->left) &&
+        areIdentical(tree1->right, tree2->right);
 }
 
 
@@ -389,65 +397,61 @@ bool BinarySearchTree<T>::containsSubtree(const BinarySearchTree<T>& subtree)  {
 
 template <typename T>
 int BinarySearchTree<T>::height(TreeNode<T>* node) {
-    if (node == nullptr)
-        return 0;
-    return node->height;
+    return node ? node->height : 0;
 }
 
 template <typename T>
 int BinarySearchTree<T>::getBalance(TreeNode<T>* node) {
-    if (node == nullptr)
-        return 0;
-    return height(node->left) - height(node->right);
+    return node ? height(node->left) - height(node->right) : 0;
 }
 
 template <typename T>
-void BinarySearchTree<T>::rotateLeft(TreeNode<T>*& node) {
-    TreeNode<T>* rightChild = node->right;
-    TreeNode<T>* leftSubtreeOfRightChild = rightChild->left;
-
-    rightChild->left = node;
-    node->right = leftSubtreeOfRightChild;
-
-    node->height = std::max(height(node->left), height(node->right)) + 1;
-    rightChild->height = std::max(height(rightChild->left), height(rightChild->right)) + 1;
-
-    node = rightChild;
-}
-
-template <typename T>
-void BinarySearchTree<T>::rotateRight(TreeNode<T>*& node) {
-    TreeNode<T>* leftChild = node->left;
-    TreeNode<T>* rightSubtreeOfLeftChild = leftChild->right;
-
-    leftChild->right = node;
-    node->left = rightSubtreeOfLeftChild;
-
-    node->height = std::max(height(node->left), height(node->right)) + 1;
-    leftChild->height = std::max(height(leftChild->left), height(leftChild->right)) + 1;
-
-    node = leftChild;
-}
-
-template <typename T>
-void BinarySearchTree<T>::balance(TreeNode<T>*& node) {
-    if (node == nullptr)
-        return;
-
-    node->height = std::max(height(node->left), height(node->right)) + 1;
+TreeNode<T>* BinarySearchTree<T>::balance(TreeNode<T>* node) {
     int balanceFactor = getBalance(node);
 
     if (balanceFactor > 1) {
         if (getBalance(node->left) < 0)
-            rotateLeft(node->left);
-        rotateRight(node);
+            node->left = rotateLeft(node->left);
+        return rotateRight(node);
     }
-    else if (balanceFactor < -1) {
+
+    if (balanceFactor < -1) {
         if (getBalance(node->right) > 0)
-            rotateRight(node->right);
-        rotateLeft(node);
+            node->right = rotateRight(node->right);
+        return rotateLeft(node);
     }
+
+    return node;
 }
+
+template <typename T>
+TreeNode<T>* BinarySearchTree<T>::rotateLeft(TreeNode<T>* y) {
+    TreeNode<T>* x = y->right;
+    TreeNode<T>* T2 = x->left;
+
+    x->left = y;
+    y->right = T2;
+
+    y->height = std::max(height(y->left), height(y->right)) + 1;
+    x->height = std::max(height(x->left), height(x->right)) + 1;
+
+    return x;
+}
+
+template <typename T>
+TreeNode<T>* BinarySearchTree<T>::rotateRight(TreeNode<T>* y) {
+    TreeNode<T>* x = y->left;
+    TreeNode<T>* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    y->height = std::max(height(y->left), height(y->right)) + 1;
+    x->height = std::max(height(x->left), height(x->right)) + 1;
+
+    return x;
+}
+
 
 
 

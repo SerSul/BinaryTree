@@ -2,7 +2,6 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
-#include "TreeNode.h"
 
 
 class IntBinarySearchTreeTest {
@@ -243,12 +242,13 @@ public:
 
         tree1.insert(5);
         tree1.insert(3);
+        tree1.insert(2);
         tree1.insert(7);
 
         BinarySearchTree<int> subtree;
 
         subtree.insert(3);
-        subtree.insert(7);
+        subtree.insert(2);
 
         assert(tree1.containsSubtree(subtree));
 
@@ -269,12 +269,16 @@ public:
         tree.insert(6);
         tree.insert(8);
 
+        std::cout << tree.height(tree.find(7));
+
         assert(tree.height(tree.find(8)) == 3);
 
         tree.insert(1);
+        std::cout << tree.height(tree.find(1));
         assert(tree.height(tree.find(1)) == 4);
 
         tree.remove(3);
+        std::cout << tree.height(tree.find(3));
         assert(tree.height(tree.find(3)) == 3);
     }
 
