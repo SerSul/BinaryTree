@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <functional>
 #include "BinarySearchTree.h"
+#include "IntTest.h"
 
 // Тип данных в дереве
 typedef float DataType;
@@ -19,7 +20,8 @@ void printMenu() {
     std::cout << "10. Where (фильтрация элементов)\n";
     std::cout << "11. Слияние деревьев\n";
     std::cout << "12. Reduce (сумма всех элементов)\n";
-    std::cout << "13. Выйти\n";
+    std::cout << "13. Тесты\n";
+    std::cout << "14. Выйти\n";
     std::cout << "Выберите опцию: ";
 }
 
@@ -206,11 +208,16 @@ int main() {
             std::cout << "Сумма всех элементов: " << sum << std::endl;
         }
         break;
-
         case 13:
+        {
+            IntBinarySearchTreeTest test;
+            test.runAllTests();
+        }
+        break;
+        case 14:
             std::cout << "Выход из программы.\n";
             break;
-
+        
         default:
             std::cout << "Неверный выбор. Попробуйте снова.\n";
             break;

@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
-    <ClCompile Include="FloatTest.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="BinarySearchTree.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -29,13 +26,13 @@
     <ClInclude Include="Complex.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="FloatTest.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="TreeNode.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="BinarySearchTree.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="IntTest.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
