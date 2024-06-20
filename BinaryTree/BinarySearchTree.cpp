@@ -70,8 +70,18 @@ TreeNode<T>* BinarySearchTree<T>::removeRecursive(TreeNode<T>*& node, T value) {
             node->right = removeRecursive(node->right, temp->data);
         }
     }
+
+    if (node == nullptr) return nullptr;
+
+    // Обновление высоты узла
+    node->height = 1 + std::max(height(node->left), height(node->right));
+
+    // Балансировка дерева
+    balance(node);
+
     return node;
 }
+
 
 template <typename T>
 TreeNode<T>* BinarySearchTree<T>::findRecursive(TreeNode<T>* node, T value) {
