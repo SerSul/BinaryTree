@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <functional>
+#include <String>
 
 template <typename T>
 class BinarySearchTree {
@@ -55,6 +56,26 @@ public:
 
     BinarySearchTree<T> extractSubtree(T value);
     bool containsSubtree(const BinarySearchTree<T>& subtree);
+
+
+    //балансировка
+    void rotateLeft(TreeNode<T>*& node);
+    void rotateRight(TreeNode<T>*& node);
+    int height(TreeNode<T>* node);
+    int getBalance(TreeNode<T>* node);
+    void balance(TreeNode<T>*& node);
+
+    //прошивка
+    void threadInorder(TreeNode<T>* node);
+    void threadCustom(TreeNode<T>* node, std::function<void(TreeNode<T>*)> traversal);
+
+    //Сохранение и чтение из строки
+    std::string toStringInorder(TreeNode<T>* node);
+    std::string toStringCustom(TreeNode<T>* node, const std::string& format);
+    TreeNode<T>* fromStringInorder(const std::string& data, int& index);
+    TreeNode<T>* fromStringCustom(const std::string& data, int& index, const std::string& format);
+
+
 
 };
 

@@ -112,11 +112,13 @@ void BinarySearchTree<T>::printTree(TreeNode<T>* node, int indent) {
 template <typename T>
 void BinarySearchTree<T>::insert(T value) {
     insertRecursive(root, value);
+    balance(root);
 }
 
 template <typename T>
 void BinarySearchTree<T>::remove(T value) {
     root = removeRecursive(root, value);
+    balance(root);
 }
 
 template <typename T>
@@ -353,6 +355,157 @@ bool BinarySearchTree<T>::containsSubtree(const BinarySearchTree<T>& subtree)  {
     return containsSubtreeRecursive(root, subtree.root);
 }
 
+template <typename T>
+int BinarySearchTree<T>::height(TreeNode<T>* node) {
+    if (node == nullptr)
+        return 0;
+    return node->height;
+}
+
+template <typename T>
+int BinarySearchTree<T>::getBalance(TreeNode<T>* node) {
+    if (node == nullptr)
+        return 0;
+    return height(node->left) - height(node->right);
+}
+
+template <typename T>
+void BinarySearchTree<T>::rotateLeft(TreeNode<T>*& node) {
+    TreeNode<T>* rightChild = node->right;
+    TreeNode<T>* leftSubtreeOfRightChild = rightChild->left;
+
+    rightChild->left = node;
+    node->right = leftSubtreeOfRightChild;
+
+    node->height = std::max(height(node->left), height(node->right)) + 1;
+    rightChild->height = std::max(height(rightChild->left), height(rightChild->right)) + 1;
+
+    node = rightChild;
+}
+
+template <typename T>
+void BinarySearchTree<T>::rotateRight(TreeNode<T>*& node) {
+    TreeNode<T>* leftChild = node->left;
+    TreeNode<T>* rightSubtreeOfLeftChild = leftChild->right;
+
+    leftChild->right = node;
+    node->left = rightSubtreeOfLeftChild;
+
+    node->height = std::max(height(node->left), height(node->right)) + 1;
+    leftChild->height = std::max(height(leftChild->left), height(leftChild->right)) + 1;
+
+    node = leftChild;
+}
+
+template <typename T>
+void BinarySearchTree<T>::balance(TreeNode<T>*& node) {
+    if (node == nullptr)
+        return;
+
+    node->height = std::max(height(node->left), height(node->right)) + 1;
+    int balanceFactor = getBalance(node);
+
+    if (balanceFactor > 1) {
+        if (getBalance(node->left) < 0)
+            rotateLeft(node->left);
+        rotateRight(node);
+    }
+    else if (balanceFactor < -1) {
+        if (getBalance(node->right) > 0)
+            rotateRight(node->right);
+        rotateLeft(node);
+    }
+}
+
+
+template <typename T>
+void BinarySearchTree<T>::threadInorder(TreeNode<T>* node) {
+    if (node == nullptr) return;
+
+    static TreeNode<T>* prev = nullptr;
+
+    threadInorder(node->left);
+
+    if (prev) {
+        prev->right = node;
+    }
+    prev = node;
+
+    threadInorder(node->right);
+}
+
+template <typename T>
+void BinarySearchTree<T>::threadCustom(TreeNode<T>* node, std::function<void(TreeNode<T>*)> traversal) {
+    traversal(node);
+}
+
+
+template <typename T>
+std::string BinarySearchTree<T>::toStringInorder(TreeNode<T>* node) {
+    if (node == nullptr)
+        return "";
+    return toStringInorder(node->left) + std::to_string(node->data) + " " + toStringInorder(node->right);
+}
+
+template <typename T>
+std::string BinarySearchTree<T>::toStringCustom(TreeNode<T>* node, const std::string& format) {
+    if (node == nullptr)
+        return "";
+
+    std::string result = format;
+    size_t pos = result.find("K");
+    if (pos != std::string::npos) {
+        result.replace(pos, 1, std::to_string(node->data));
+    }
+    pos = result.find("L");
+    if (pos != std::string::npos) {
+        result.replace(pos, 1, toStringCustom(node->left, format));
+    }
+    pos = result.find("P");
+    if (pos != std::string::npos) {
+        result.replace(pos, 1, toStringCustom(node->right, format));
+    }
+    return result;
+}
+
+template <typename T>
+TreeNode<T>* BinarySearchTree<T>::fromStringInorder(const std::string& data, int& index) {
+    if (index >= data.length())
+        return nullptr;
+
+    int value = 0;
+    while (index < data.length() && isdigit(data[index])) {
+        value = value * 10 + (data[index] - '0');
+        index++;
+    }
+    TreeNode<T>* node = new TreeNode<T>(value);
+    node->left = fromStringInorder(data, ++index);
+    node->right = fromStringInorder(data, ++index);
+    return node;
+}
+
+template <typename T>
+TreeNode<T>* BinarySearchTree<T>::fromStringCustom(const std::string& data, int& index, const std::string& format) {
+    if (index >= data.length())
+        return nullptr;
+
+    size_t pos = format.find("K");
+    int value = 0;
+    while (index < data.length() && isdigit(data[index])) {
+        value = value * 10 + (data[index] - '0');
+        index++;
+    }
+    TreeNode<T>* node = new TreeNode<T>(value);
+    pos = format.find("L");
+    if (pos != std::string::npos) {
+        node->left = fromStringCustom(data, ++index, format);
+    }
+    pos = format.find("P");
+    if (pos != std::string::npos) {
+        node->right = fromStringCustom(data, ++index, format);
+    }
+    return node;
+}
 
 
 #endif // BINARYSEARCHTREE_TPP

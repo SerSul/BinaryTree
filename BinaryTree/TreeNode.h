@@ -2,13 +2,14 @@
 #define TREENODE_H
 
 template <typename T>
-class TreeNode {
-public:
+struct TreeNode {
     T data;
-    TreeNode<T>* left;
-    TreeNode<T>* right;
+    TreeNode* left;
+    TreeNode* right;
+    int height; // Добавляем поле height
 
-    TreeNode(T value) : data(value), left(nullptr), right(nullptr) {}
+    TreeNode(T value)
+        : data(value), left(nullptr), right(nullptr), height(1) {}
 };
 
 #endif // TREENODE_H
