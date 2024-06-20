@@ -76,7 +76,6 @@ int main() {
             break;
 
         case 4:
-            // Обходы
             do {
                 printTraversalMenu();
                 std::cin >> choice;
@@ -218,7 +217,7 @@ int main() {
         }
 
         std::cout << std::endl;
-    } while (choice != 13);
+    } while (choice != 14);
 
     return 0;
 }

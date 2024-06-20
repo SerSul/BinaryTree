@@ -5,13 +5,14 @@
 #include <iostream>
 #include <stdexcept>
 #include <functional>
-#include <String>
+#include <string> 
 
 template <typename T>
 class BinarySearchTree {
 private:
     TreeNode<T>* root;
 
+    // Рекурсивные функции для работы с деревом
     void insertRecursive(TreeNode<T>*& node, T value);
     TreeNode<T>* findMin(TreeNode<T>* node);
     TreeNode<T>* removeRecursive(TreeNode<T>*& node, T value);
@@ -26,12 +27,14 @@ public:
     BinarySearchTree() : root(nullptr) {}
     ~BinarySearchTree() { clear(); }
 
+    // Публичные функции для работы с деревом
     void insert(T value);
     void remove(T value);
     TreeNode<T>* find(T value);
     void printTree();
     void clear();
 
+    // Функции для печати дерева в различных порядках
     void printPreorder();
     void printPreorder(TreeNode<T>* node);
     void printPostorder();
@@ -44,6 +47,7 @@ public:
     void printReversePostorder();
     void printReversePostorder(TreeNode<T>* node);
 
+    // Функции для трансформации дерева
     template <typename U>
     BinarySearchTree<U> map(std::function<U(T)> func) const;
 
@@ -54,28 +58,16 @@ public:
 
     BinarySearchTree<T> merge(const BinarySearchTree<T>& other) const;
 
+    // Функции для работы с поддеревьями
     BinarySearchTree<T> extractSubtree(T value);
     bool containsSubtree(const BinarySearchTree<T>& subtree);
 
-
-    //балансировка
+    // Балансировка дерева
     void rotateLeft(TreeNode<T>*& node);
     void rotateRight(TreeNode<T>*& node);
     int height(TreeNode<T>* node);
     int getBalance(TreeNode<T>* node);
     void balance(TreeNode<T>*& node);
-
-    //прошивка
-    void threadInorder(TreeNode<T>* node);
-    void threadCustom(TreeNode<T>* node, std::function<void(TreeNode<T>*)> traversal);
-
-    //Сохранение и чтение из строки
-    std::string toStringInorder(TreeNode<T>* node);
-    std::string toStringCustom(TreeNode<T>* node, const std::string& format);
-    TreeNode<T>* fromStringInorder(const std::string& data, int& index);
-    TreeNode<T>* fromStringCustom(const std::string& data, int& index, const std::string& format);
-
-
 
 };
 
